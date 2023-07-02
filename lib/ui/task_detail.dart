@@ -4,11 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:my_progress_tracker/ui/theme.dart';
 
 import '../controllers/task_controller.dart';
-import '../models/board.dart';
 import '../models/task.dart';
 import '../services/theme_services.dart';
 import 'add_task.dart';
-import 'button.dart';
 
 class TaskDetailPage extends StatefulWidget {
   final Task? taskDetail;
@@ -39,7 +37,6 @@ class TaskDetailPageState extends State<TaskDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("should show edit.......${shouldShowEdit}");
     var setDate = DateFormat.yMMMd().format(DateTime.parse(taskDetail!.date!));
     var _selectedBoard = Get.put(TaskController())
         .boardList
@@ -208,9 +205,7 @@ class TaskDetailPageState extends State<TaskDetailPage> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: ColorConstants.buttonColor
-                                    //color: Get.isDarkMode ? Colors.greenAccent: Color.amberAccent)),
-                                    ),
+                                    color: ColorConstants.buttonColor),
                                 child: Center(
                                     child: Text(
                                   "Edit Task",

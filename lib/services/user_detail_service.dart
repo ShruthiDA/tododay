@@ -21,7 +21,7 @@ class UserDetailService {
   _saveUserNameToBox(String newName) => _box.write(_keyUserName, newName);
   _saveProfilePicPathToBox(String? imgFilePath) =>
       _box.write(_keyProfileImage, imgFilePath);
-  _savePrimaryColorIndexToBox(int newIndex) => 
+  _savePrimaryColorIndexToBox(int newIndex) =>
       _box.write(_keySelectedPrimaryColor, newIndex);
   _saveNotificationEnabledToBox(bool newIndex) =>
       _box.write(_keyNotificationEnabled, newIndex);
@@ -35,7 +35,6 @@ class UserDetailService {
   }
 
   void updatePrimaryColorIndex(int newIndex) {
-    print("........updatePrimaryColorIndex.........${newIndex}");
     _savePrimaryColorIndexToBox(newIndex);
   }
 

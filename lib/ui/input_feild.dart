@@ -38,11 +38,9 @@ class TextInputFeild extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: ColorConstants.buttonColor.withOpacity(Get.isDarkMode
-                        ? 0.6
-                        : 0.4)), // color: Get.isDarkMode ? Colors.grey : Colors.black38),
+                    color: ColorConstants.buttonColor
+                        .withOpacity(Get.isDarkMode ? 0.6 : 0.4)),
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                //color: Colors.yellow.withOpacity(0.1)
               ),
               child: Row(children: [
                 Expanded(

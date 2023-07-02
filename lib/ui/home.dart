@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:my_progress_tracker/controllers/task_controller.dart';
 import 'package:my_progress_tracker/db/db_helper.dart';
 import 'package:my_progress_tracker/models/task.dart';
+import 'package:my_progress_tracker/services/local_notify_manager.dart';
 import 'package:my_progress_tracker/services/user_detail_service.dart';
 import 'package:my_progress_tracker/ui/add_task.dart';
 import 'package:my_progress_tracker/ui/button.dart';
@@ -18,17 +19,16 @@ import 'package:my_progress_tracker/ui/task_detail.dart';
 import 'package:my_progress_tracker/ui/task_list.dart';
 import 'package:my_progress_tracker/ui/task_tile_new.dart';
 import 'package:my_progress_tracker/ui/theme.dart';
-import 'package:my_progress_tracker/ui/task_tile.dart';
 import 'package:my_progress_tracker/ui/profile.dart';
 import '../models/board.dart';
 import '../models/quotes.dart';
 import '../services/api_service.dart';
-import '../services/notify_service.dart';
 import '../services/theme_services.dart';
 import 'boards_list.dart';
 import 'custom_alert_dialog.dart';
 import 'dol_durma_clipper.dart';
 import 'edit_profile.dart';
+import 'notification_detail.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,13 +54,24 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    notifyService = NotifyService();
-    notifyService.initializeNotification();
-    notifyService.requestIOSPermissions();
-    //APi cal , sUncomment later
+
+    //APi cal, Uncomment later
     //getQuotes();
     _taskController.getTaskBoard();
     _updateCount();
+
+    //await localNotifyManager.showScheduledNotification();
+    localNotifyManager.setOnNotificationRecieve(onNotificationRecieve);
+    localNotifyManager.setOnNotificationClick(onNotificationClick);
+  }
+
+  void onNotificationRecieve(ReceieveNotification noti) {
+    print("onNotificationRecieve -> ${noti.id}");
+  }
+
+  void onNotificationClick(String payload) {
+    print("onNotificationClick ->  ${payload}");
+    Get.to(() => NotificationDetailPage(label: payload));
   }
 
   @override
@@ -69,11 +80,7 @@ class _HomePageState extends State<HomePage> {
         appBar: _appBar(),
         drawer: Drawer(
           shadowColor: Colors.black,
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
           child: ListView(
-            // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
             children: [
               SizedBox(
@@ -86,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () async {
                   Navigator.pop(context);
                   await Get.to(ProfilePage());
-                  //Wait & fetch list again to refresh the list on home page.
+
                   setState(() {
                     isThemeUpdated = isThemeUpdated;
                   });
@@ -108,8 +115,6 @@ class _HomePageState extends State<HomePage> {
                       style: subHeadingNormalStyle,
                     )),
               ),
-
-              //_showNotification(context, status),
               ListTile(
                   trailing: Transform.scale(
                       scale: 0.8,
@@ -123,21 +128,6 @@ class _HomePageState extends State<HomePage> {
                           });
                         },
                       )),
-                  // FlutterSwitch(
-                  //   height: 20.0,
-                  //   width: 40.0,
-                  //   padding: 4.0,
-                  //   toggleSize: 15.0,
-                  //   borderRadius: 10.0,
-                  //   activeColor: ColorConstants.buttonColor,
-                  //   value: isNotificationEnabled,
-                  //   onToggle: (value) {
-                  //     //  print("Notification toggle ${value}");
-                  //     setState(() {
-                  //       isNotificationEnabled = value;
-                  //     });
-                  //   },
-                  // ),
                   leading: Container(
                       width: 40,
                       height: 40,
@@ -149,7 +139,6 @@ class _HomePageState extends State<HomePage> {
                           size: 20,
                           color: Get.isDarkMode ? Colors.white : Colors.black)),
                   title: Text("Notification", style: subHeadingNormalStyle)),
-
               _showLogout(context),
             ],
           ),
@@ -157,9 +146,7 @@ class _HomePageState extends State<HomePage> {
         body: Column(children: [
           _addTaskBar(),
           _showQuote(),
-          _showTab(),
           SizedBox(height: 10),
-          //_addDatePicker(),
           _taskTitle(),
           showCount
               ? Padding(
@@ -198,9 +185,7 @@ class _HomePageState extends State<HomePage> {
                 )
               : Container(),
           SizedBox(height: 15),
-          //_showTitle(),
           _showTasks()
-          // _childWidget()
         ]));
   }
 
@@ -249,42 +234,11 @@ class _HomePageState extends State<HomePage> {
   _appBar() {
     return AppBar(
       iconTheme: IconThemeData(color: ColorConstants.iconColor),
-      //backgroundColor: context.theme.backgroundColor,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      // title: Text('Welcome ${userName}', style: TextStyle(color: Colors.black87)),
-
-      // leading: GestureDetector(
-      //     onTap: () async {
-      //       await Get.to(ProfilePage());
-      //       //Set state to reload User name if Name is updated
-      //       setState(() {
-      //         userName = UserDetailService().userName ?? "";
-      //         imagePath = UserDetailService().profileImagePath;
-      //       });
-      //     },
-      //     child: Row(children: [SizedBox(width: 15), _loadImage()])),
-
       actions: [
-        GestureDetector(
-            onTap: () async {
-              // await Get.to(ProfilePage());
-              // //Set state to reload User name if Name is updated
-              // setState(() {
-              //   userName = UserDetailService().userName ?? "";
-              //   imagePath = UserDetailService().profileImagePath;
-              // });
-            },
-            child: _loadImage()),
+        GestureDetector(onTap: () async {}, child: _loadImage()),
         SizedBox(width: 20),
-        // GestureDetector(
-        //   onTap: () async {
-        //     await Get.to(AddTaskPage());
-        //     //Wait & fetch list again to refresh the list on home page.
-        //     _taskController.getTasks();
-        //   },
-        //   child: Icon(Icons.add, color: Colors.black),
-        // ),
       ],
     );
     // SizedBox(width: 10));
@@ -307,8 +261,6 @@ class _HomePageState extends State<HomePage> {
               shape: BoxShape.circle,
               image: DecorationImage(
                   fit: BoxFit.fill, image: FileImage(File(imagePath!)))));
-
-      //image: AssetImage("images/profile_pic.jpeg")
     }
   }
 
@@ -322,12 +274,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   _updateCount() {
-    //buildShowDialog(context);
     Timer(Duration(seconds: 1), () {
       int c1 = 0;
       int c2 = 0;
       if (_taskController.taskList.length == 0) {
-        print("Length is 0...........${_taskController.taskList.length}");
         setState(() {
           showCount = false;
         });
@@ -339,7 +289,6 @@ class _HomePageState extends State<HomePage> {
                 }
             });
 
-        print("Lenght in > 0...........${_taskController.taskList.length}");
         setState(() {
           showCount = true;
           todoCount = c1;
@@ -348,7 +297,6 @@ class _HomePageState extends State<HomePage> {
       }
 
       if (todoCount == 0 && completedCount == 0) showCount = false;
-      print("update count called...........${showCount}");
     });
   }
 
@@ -383,7 +331,6 @@ class _HomePageState extends State<HomePage> {
             "Today - ${DateFormat.yMMMMd().format(DateTime.now())}",
             style: subHeadingStyle,
           ),
-          //Text("Today", style: headingStyle),
         ]),
         MyButton(
             label: "Add Task",
@@ -403,8 +350,6 @@ class _HomePageState extends State<HomePage> {
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Today's Task", style: toolbarTitleStyle),
-
-          //Text("Today", style: headingStyle),
         ]),
         GestureDetector(
           onTap: () async {
@@ -601,7 +546,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   getColorIndex(int boardId) {
-    //var r = _taskController.boardList.firstWhereOrNull((e) => e.id == boardId);
     Board? b = _taskController.boardList
         .firstWhereOrNull((element) => element.id == boardId);
     if (b != null) {
@@ -627,13 +571,9 @@ class _HomePageState extends State<HomePage> {
       showMarkAsCompleteOption = true;
     }
     return showMarkAsCompleteOption;
-    print("........showMarkAsCompleteOption......${showMarkAsCompleteOption}");
   }
 
   _showBottomSheet(BuildContext context, Task task) {
-    print("........_showBottomSheet......");
-    //var showMarkAsCompleteOption = _showMarkAsCompleteOption(task);
-
     Get.bottomSheet(Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -656,7 +596,7 @@ class _HomePageState extends State<HomePage> {
                 color: ColorConstants.buttonColor,
                 onTap: () async {
                   Get.back();
-                  //await Get.to(AddTaskPage(editTask: task));
+
                   await Get.to(TaskDetailPage(
                       taskDetail: task, shouldShowEdit: _showShouldEdit(task)));
                   _taskController.getTasks();
@@ -747,7 +687,6 @@ class _HomePageState extends State<HomePage> {
         horizontal: 10,
       ),
       child: Card(
-        //color: Get.isDarkMode ? Colors.grey.shade700 : Color(0XFFeeeeee),
         color: Get.isDarkMode
             ? ColorConstants.buttonColor.withOpacity(0.1)
             : ColorConstants.buttonColor.withOpacity(0.1),
@@ -818,7 +757,6 @@ class _HomePageState extends State<HomePage> {
           Navigator.pop(context);
           _taskController.getTasks();
           _updateCount();
-          print("COmplete.....");
         },
         positiveBtnText: 'Yes',
         negativeBtnText: 'No');
@@ -868,63 +806,10 @@ _showShouldEdit(Task task) {
   return showMarkAsCompleteOption;
 }
 
-_showTab() {
-  return TabBar(
-      isScrollable: true,
-      labelPadding: EdgeInsets.symmetric(horizontal: 10.0),
-      tabs: [
-        Tab(
-          text: "TODO",
-          icon: Icon(Icons.access_time),
-        ),
-        Tab(
-          text: "COMPLETED",
-          icon: Icon(Icons.access_alarm),
-        )
-      ]);
-}
-
 _showTheme(BuildContext context) {}
-
-// _showNotification(BuildContext context, bool status) {
-//   return GestureDetector(
-//     onTap: () {
-//       Navigator.pop(context);
-//       Get.to(BoardsListPage());
-//     },
-//     child: ListTile(
-//         trailing: FlutterSwitch(
-//           height: 20.0,
-//           width: 40.0,
-//           padding: 4.0,
-//           toggleSize: 15.0,
-//           borderRadius: 10.0,
-//           activeColor: ColorConstants.buttonColor,
-//           value: status,
-//           onToggle: (value) {
-//             setState(() {
-//               status = value;
-//             });
-//           },
-//         ),
-//         leading: Container(
-//             width: 40,
-//             height: 40,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(180),
-//               color: ColorConstants.buttonColor.withOpacity(0.3),
-//             ),
-//             child: Icon(Icons.notifications,
-//                 size: 20, color: Get.isDarkMode ? Colors.white : Colors.black)),
-//         title: Text("Notification", style: subHeadingNormalStyle)),
-//   );
-// }
 
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
-    // print(" ${year}  ${other.year}");
-    // print(" ${month}  ${other.month}");
-    // print(" ${day}  ${other.day}");
     var isSame = year == other.year && month == other.month && day == other.day;
     return isSame;
   }

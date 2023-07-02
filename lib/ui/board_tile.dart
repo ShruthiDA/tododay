@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_progress_tracker/db/db_helper.dart';
-
 import '../models/board.dart';
 import '../services/theme_services.dart';
 
@@ -13,13 +11,10 @@ class BoardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //DBHelper.getBoardTaskCount(board!);
-    //print("Task count is .... ${taskCount}");
     return Container(
       padding: EdgeInsets.all(8),
       width: MediaQuery.of(context).size.width,
       child: Container(
-        //padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: ThemeService.getBGClr(board?.color ?? 0),

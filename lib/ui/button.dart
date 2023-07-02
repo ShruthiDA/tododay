@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import '../services/theme_services.dart';
 
 class MyButton extends StatelessWidget {
@@ -19,9 +17,7 @@ class MyButton extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: ColorConstants.buttonColor
-            //color: Get.isDarkMode ? Colors.greenAccent: Color.amberAccent)),
-            ),
+            color: ColorConstants.buttonColor),
         child: Center(
             child: Text(
           label,

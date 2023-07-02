@@ -20,8 +20,6 @@ class DBHelper {
       //  print("path is $_path");
       _db =
           await openDatabase(_path, version: _version, onCreate: (db, version) {
-        // print("creating a new one");
-
         db.execute("CREATE TABLE $_tableName("
             "id INTEGER PRIMARY KEY AUTOINCREMENT, "
             "title STRING, note TEXT, date STRING, "
@@ -48,23 +46,16 @@ class DBHelper {
 
   //Tasks
   static Future<int?> insert(Task? task) async {
-    //print("creating a new one $task?.repeat");
-    //print("insert function called");
-    //print(task?.repeat);
     return await _db?.insert(_tableName, task!.toJson());
   }
 
   //Tasks
   static Future<int?> updateTask(Task? task) async {
-    //print("Updating existing $task?.repeat");
-    //print("Update function called");
-    //print(task?.repeat);
     return await _db?.update(_tableName, task!.toJson(),
         where: "id = ?", whereArgs: [task.id]);
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
-    //print("query function called");
     return await _db!.query(_tableName);
   }
 
@@ -79,7 +70,6 @@ class DBHelper {
   }
 
   static updateTaskFull(Task task) async {
-    //print("calleddd    raw update ${task.id} ${task.title}");
     await _db!.rawUpdate(
         '''
       UPDATE tasks SET id = ?, title = ?, note = ?, date = ?, startTime = ?, endTime = ?, remind = ?, repeat = ?, boardId = ?, isCompleted = ?, taskStatusUpdatedOn = ?  WHERE id = ? ''',
@@ -101,8 +91,6 @@ class DBHelper {
 
   //Task Board
   static Future<int?> insertBoard(Board? taskBoard) async {
-    //print("creating a new one $taskBoard?.color");
-    //  print("insert function called");
     return await _db?.insert(_categoryTableName, taskBoard!.toJson(),
         conflictAlgorithm: ConflictAlgorithm.ignore);
   }
@@ -121,16 +109,12 @@ class DBHelper {
   }
 
   static updateTaskBoard(Board board) async {
-    // print("  here....... ${board.color}  ${board.boardName}");
     await _db!.rawUpdate('''
       UPDATE taskboards SET color = ? WHERE boardName = ? ''',
         [board.color, board.boardName]);
   }
 
   static Future<int?> updateBoard(Board? board) async {
-    // print("Updating existing $board?.repeat");
-    //print("Update function called");
-    //print(task?.repeat);
     return await _db?.update(_categoryTableName, board!.toJson(),
         where: "id = ?", whereArgs: [board.id]);
   }
@@ -149,12 +133,10 @@ class DBHelper {
   }
 
   static getBoardTaskCount(int boardId) async {
-    // print("  here....... ${boardId}");
     var taskList = <Task>[];
     List<Map<String, dynamic>> tasks = await _db!.rawQuery('''
       SELECT * FROM tasks WHERE boardId = ? ''', [boardId]);
     taskList.addAll(tasks.map((data) => Task.fromJson(data)).toList());
-    // print("  here....... ${taskList.length}");
     return taskList.length;
   }
 }

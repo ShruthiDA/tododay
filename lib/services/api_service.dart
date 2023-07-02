@@ -10,7 +10,6 @@ class ApiService {
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
-     // print("success");
       return Quotes.fromJson(jsonDecode(response.body));
     } else {
       print("error in getting data");

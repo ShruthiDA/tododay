@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_progress_tracker/models/task.dart';
@@ -8,7 +7,6 @@ import 'package:my_progress_tracker/ui/button.dart';
 import 'package:my_progress_tracker/ui/theme.dart';
 import '../models/board.dart';
 import '../controllers/task_controller.dart';
-import '../services/notify_service.dart';
 import 'input_feild.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -30,9 +28,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   void initState() {
     super.initState();
-    notifyService = NotifyService();
-    notifyService.initializeNotification();
-    notifyService.requestIOSPermissions();
     _titleController.text = myEditTask?.title == null ? "" : myEditTask!.title!;
     _noteController.text = myEditTask?.note == null ? "" : myEditTask!.note!;
   }
@@ -190,12 +185,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   elevation: 4,
                   onChanged: (Board? newValue) {
                     setState(() {
-                      // print("aa............${newValue!.id}");
                       myEditTask?.setBoardId(newValue!.id!);
                       _selectedBoard = newValue;
                       _selectedBoardName = newValue!.boardName!;
-                      // print("New category selecred");
-                      //  print(newValue.boardName);
                     });
                   },
                   items: _taskController.boardList
@@ -213,21 +205,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   child: MyButton(
                       label: myEditTask == null ? "Add Task" : "Update Task",
                       onTap: () => {_validateInputData()}))
-
-              // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              //   Container(
-              //     padding: EdgeInsets.all(14),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [Text("Choose Color"), _getCategory()],
-              //     ),
-              //   ),
-              //   Container(
-              //       margin: EdgeInsets.only(right: 14),
-              //       child: MyButton(
-              //           label: "Add Task", onTap: () => {_validateInputData()}))
-              // ]),
             ],
           ))),
     );
@@ -314,7 +291,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
         await showTimePicker(context: context, initialTime: _startTime);
     if (_pickedStartTime != null) {
       if (_endTime.compareTo(_pickedStartTime) == 1) {
-        // print("Start time is lesser than end tim");
         setState(() {
           myEditTask?.setStartTime(_pickedStartTime.format(context));
           _startTime = _pickedStartTime;
@@ -335,7 +311,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
     if (_pickedEndTime != null) {
       if (_startTime.compareTo(_pickedEndTime) == -1) {
-        // print("End time is greater than start time");
         setState(() {
           myEditTask?.setEndTime(_pickedEndTime.format(context));
           _endTime = _pickedEndTime;
@@ -414,23 +389,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _updateTaskInDB() async {
     int? value = await _taskController.updateTask(getUpdateTaskObject());
-    //print("My after update is $value");
   }
 
   _addTaskToDB() async {
     int? value = await _taskController.addTask(task: getCreateTaskObject());
-    // print("My ID is $value");
     var scheduleTime = _selectedDate.applyTimeOfDay(
         hour: _startTime.hour, minute: _startTime.minute);
-    // print("scheduleTime is...... $scheduleTime");
-    // notifyService.scheduledTaskNotification(getCreateTaskObject(), scheduleTime);
-
-    //DateTime date = DateFormat.jm().parse(_startTime.toString());
-    //var myTime = DateFormat("HH:mm").format(date);
     notifyService.scheduledNotificationNew(
-      _startTime.hour, _startTime.minute,
-      // int.parse(myTime.toString().split(":")[0]),
-      // int.parse(myTime.toString().split(":")[1]),
+      _startTime.hour,
+      _startTime.minute,
       getCreateTaskObject(),
       _selectedDate,
     );

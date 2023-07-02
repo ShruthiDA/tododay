@@ -41,7 +41,8 @@ dependencies:
   get:
   # For local notification
   #flutter_local_notifications: 
-  flutter_local_notifications:
+  flutter_local_notifications: ^9.6.0
+  rxdart: ^0.27.6
   # To get local timezone
   flutter_native_timezone: 
   intl:

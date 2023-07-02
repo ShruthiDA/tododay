@@ -4,7 +4,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:my_progress_tracker/ui/add_board.dart';
 import 'package:my_progress_tracker/ui/home.dart';
 import 'package:my_progress_tracker/ui/task_detail.dart';
 import 'package:my_progress_tracker/ui/task_tile_new.dart';
@@ -15,9 +14,6 @@ import '../models/board.dart';
 import '../models/task.dart';
 import '../services/theme_services.dart';
 import 'add_task.dart';
-import 'board_tile.dart';
-import 'button.dart';
-import 'custom_alert_dialog.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -56,7 +52,6 @@ class TaskListPageState extends State<TaskListPage> {
     _taskController.getTasks();
     return AppBar(
       iconTheme: IconThemeData(color: ColorConstants.iconColor),
-      //backgroundColor: context.theme.backgroundColor,
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
@@ -140,14 +135,11 @@ class TaskListPageState extends State<TaskListPage> {
               shouldShow = true;
             }
 
-            print(
-                "selectedDate ..........${selectedDate} ..........today....${DateTime.now()}");
             if (shouldShow == true && selectedDate.isSameDate(DateTime.now())) {
               //Only show actual status for today
-              print("yes ..........same");
+
               shouldShowActualCompleteStatus = true;
             } else {
-              print("no ..........not same");
               //For future day show only as TODO
               shouldShowActualCompleteStatus = false;
             }
@@ -175,17 +167,12 @@ class TaskListPageState extends State<TaskListPage> {
   }
 
   getColorIndex(int boardId) {
-    print("boardId is    ${boardId}");
-    print("board list size is    ${_taskController.boardList.length}");
-
     //var r = _taskController.boardList.firstWhereOrNull((e) => e.id == boardId);
     Board? b = _taskController.boardList
         .firstWhereOrNull((element) => element.id == boardId);
     if (b != null) {
-      print("return matching color index is    ${b.color}");
       return b.color;
     } else {
-      print("return no mstch found   ${_taskController.boardList.length} ${b}");
       return 0;
     }
   }
@@ -243,9 +230,7 @@ class TaskListPageState extends State<TaskListPage> {
 
   _showEditOption(Task task) {
     var showMarkAsCompleteOption;
-    print("selected date.........${selectedDate}");
-    print("selected date.........${DateTime.now()}");
-    print("Not same.........${selectedDate.isSameDate(DateTime.now())}");
+
     if (!selectedDate.isSameDate(DateTime.now())) {
       showMarkAsCompleteOption = true;
     } else {
@@ -264,19 +249,6 @@ class TaskListPageState extends State<TaskListPage> {
     }
     return showMarkAsCompleteOption;
   }
-
-  // if (task.isCompleted == 1) {
-  //   //check when was the status last updated; if not updated today then display the option
-  //   var lastUpdatedDate = DateTime.parse(task.taskStatusUpdatedOn!);
-  //   var islastUpdatedIsToday = lastUpdatedDate.isSameDate(selectedDate);
-  //   if (task.taskStatusUpdatedOn != null && islastUpdatedIsToday) {
-  //     showMarkAsCompleteOption = false;
-  //   } else {
-  //     showMarkAsCompleteOption = true;
-  //   }
-  // } else {
-  //   showMarkAsCompleteOption = true;
-  // }
 
   _bottomSheetButton(
       {required BuildContext context,

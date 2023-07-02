@@ -143,8 +143,6 @@ class ColorConstants {
       UserDetailService().selectedPrimaryColorIndex);
   static var buttonColor = ThemeService.getAppPrimaryClr(
       UserDetailService().selectedPrimaryColorIndex);
-  //static const textColorLight = Color.fromARGB(255, 253, 253, 253);
-  //static const textColorDark = Color.fromARGB(255, 0, 0, 0);
 
   static const headingColor = Colors.black87;
   static const headingColorLight = Colors.white;

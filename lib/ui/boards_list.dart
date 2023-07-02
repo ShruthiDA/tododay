@@ -36,7 +36,6 @@ class BoardsListPageState extends State<BoardsListPage> {
         count++;
       }
     });
-    print("task........${countArr}");
     return count;
   }
 
@@ -73,8 +72,6 @@ class BoardsListPageState extends State<BoardsListPage> {
   }
 
   _displayCategoryOld() {
-    // print("Length is    ");
-    //  print(_taskController.boardList.length);
     return Container(child: Obx(() {
       if (_taskController.boardList.length == 0) {
         return Container(
@@ -96,10 +93,7 @@ class BoardsListPageState extends State<BoardsListPage> {
           padding:
               const EdgeInsets.only(top: 10, bottom: 10, right: 8, left: 8),
           child: GridView.count(
-              // Create a grid with 2 columns. If you change the scrollDirection to
-              // horizontal, this produces 2 rows.
               crossAxisCount: 2,
-              // Generate 100 widgets that display their index in the List.
               children:
                   List.generate(_taskController.boardList.length, (index) {
                 return GestureDetector(

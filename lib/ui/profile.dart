@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_progress_tracker/services/theme_services.dart';
-import 'package:my_progress_tracker/ui/boards_list.dart';
 import 'package:my_progress_tracker/ui/theme.dart';
-import '../services/notify_service.dart';
 import '../services/user_detail_service.dart';
-import 'button.dart';
-import 'edit_profile.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -32,23 +27,14 @@ class _ProfilePagePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    print("...............INIT STATE.................");
     isLightModeSelected = Get.isDarkMode == true ? false : true;
     isDarkModeSelected = Get.isDarkMode == true ? true : false;
-    print(
-        "...............INIT STATE............Light mode..... ${isLightModeSelected}");
-    print(
-        "...............INIT STATE............Light mode..... ${isDarkModeSelected}");
     _selectedColorIndex = UserDetailService().selectedPrimaryColorIndex;
-    notifyService = NotifyService();
-    notifyService.initializeNotification();
-    notifyService.requestIOSPermissions();
   }
 
   _getBody() {
     return Container(
       child: ListView(
-        // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
           SizedBox(height: 15),
@@ -64,7 +50,6 @@ class _ProfilePagePageState extends State<ProfilePage> {
                     activeColor: ColorConstants.buttonColor,
                     value: isLightModeSelected,
                     onChanged: (value) {
-                      print("Light mode enabled ................${value}");
                       buildShowDialog(context);
                       isLightModeSelected = value;
                       switchTheme();
@@ -92,7 +77,6 @@ class _ProfilePagePageState extends State<ProfilePage> {
                 activeColor: ColorConstants.buttonColor,
                 value: isDarkModeSelected,
                 onChanged: (value) {
-                  print("Dark mode enabled ................${value}");
                   buildShowDialog(context);
                   isDarkModeSelected = value;
                   switchTheme();
@@ -216,29 +200,12 @@ class _ProfilePagePageState extends State<ProfilePage> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      // backgroundColor: context.theme.backgroundColor,
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios, color: ColorConstants.iconColor),
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text("Themes", style: toolbarTitleStyle),
       centerTitle: true,
-      // actions: [
-      //   GestureDetector(
-      //     onTap: () {
-      //       ThemeService().switchTheme();
-      //       notifyService.displayNotification(
-      //           title: "Notification: Theme changed",
-      //           body: Get.isDarkMode
-      //               ? "Activated Light theme"
-      //               : "Activated Dark Theme");
-      //       notifyService.scheduledNotification();
-      //     },
-      //     child: Icon(Get.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-      //         color: ColorConstants.iconColor, size: 25),
-      //   ),
-      //   SizedBox(width: 15),
-      // ],
     );
   }
 }

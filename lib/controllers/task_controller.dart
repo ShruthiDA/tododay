@@ -1,8 +1,5 @@
-import 'dart:ffi';
-
 import 'package:get/get.dart';
 import 'package:my_progress_tracker/db/db_helper.dart';
-import 'package:my_progress_tracker/models/taskcount.dart';
 
 import '../models/task.dart';
 import '../models/board.dart';
@@ -50,8 +47,6 @@ class TaskController extends GetxController {
 
   void getTaskBoard() async {
     List<Map<String, dynamic>> boards = await DBHelper.queryTaskBoard();
-    //print(boards);
-    print("Board list called");
     boardList.assignAll(boards.map((data) => Board.fromJson(data)).toList());
   }
 
@@ -67,29 +62,9 @@ class TaskController extends GetxController {
     return await DBHelper.updateBoard(board);
   }
 
-  // void getTaskCount() async {
-  //   var countArr = <int>[];
-  //   List<Map<String, dynamic>> boards = await DBHelper.queryTaskBoard();
-  //   print(boards);
-  //   boardList.assignAll(boards.map((data) => Board.fromJson(data)).toList());
-
-  //   boardList.forEach((element) async {
-  //     print("board ..... ${element.boardName}");
-  //     int c = await DBHelper.getBoardTaskCount(element);
-  //     countArr.add(c);
-  //     print("count ..........${c}");
-  //   });
-
-  //   taskCountList.assignAll(countArr);
-  //   print("countArr ....size......${countArr.length}");
-  //   print("taskCountList ....size......${taskCountList.length}");
-  // }
-
   void getTaskCount() async {
     getTaskBoard();
     getTasks();
-    print(
-        "taskCountList ....size......${boardList.length}  ${taskList.length}");
     var countArr = <int>[];
     boardList.forEach((element) {
       int count = 0;
@@ -98,9 +73,7 @@ class TaskController extends GetxController {
           count++;
         }
       });
-      print("board & Task count ....size......${element.boardName}  ${count}");
       countArr.add(count);
     });
-    print("taskCountList ....size......${countArr.length}");
   }
 }

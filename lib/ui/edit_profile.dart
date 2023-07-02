@@ -172,10 +172,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       final imageTemp = File(image.path);
       setState(() => this.imagePath = image.path);
       UserDetailService().updateProfilePic(image.path);
-      //print('pick image: $imageTemp');
     } on PlatformException catch (e) {
       UserDetailService().updateProfilePic(null);
-      //print('Failed to pick image: $e');
     }
   }
 

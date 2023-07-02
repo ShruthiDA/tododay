@@ -105,10 +105,7 @@ class _AddBoardPageState extends State<AddBoardPage> {
   _chooseColorNew() {
     return GridView.count(
         shrinkWrap: true,
-        // Create a grid with 2 columns. If you change the scrollDirection to
-        // horizontal, this produces 2 rows.
         crossAxisCount: 5,
-        // Generate 100 widgets that display their index in the List.
         children: List.generate(10, (index) {
           return GestureDetector(
               onTap: () => {
@@ -157,7 +154,6 @@ class _AddBoardPageState extends State<AddBoardPage> {
           colorText: Colors.white,
           icon: Icon(Icons.warning, color: Colors.white));
     } else if (_titleController.text.isNotEmpty) {
-      //Save data & go back to home screen
       _addBoardToDB();
       Get.back();
     } else if (_titleController.text.isEmpty) {
@@ -182,7 +178,6 @@ class _AddBoardPageState extends State<AddBoardPage> {
             boardName: _titleController.text,
             color: _selectedColorIndex,
             isPredefined: 0));
-    // print("My ID is $value");
   }
 
   _updateBoard() async {
