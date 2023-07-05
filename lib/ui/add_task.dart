@@ -7,6 +7,7 @@ import 'package:my_progress_tracker/ui/button.dart';
 import 'package:my_progress_tracker/ui/theme.dart';
 import '../models/board.dart';
 import '../controllers/task_controller.dart';
+import '../services/local_notify_manager.dart';
 import 'input_feild.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   Task? myEditTask;
-  var notifyService;
+  //var notifyService;
   _AddTaskPageState(Task? editTask) {
     this.myEditTask = editTask;
   }
@@ -392,15 +393,31 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _addTaskToDB() async {
+    Task task = getCreateTaskObject();
     int? value = await _taskController.addTask(task: getCreateTaskObject());
+
     var scheduleTime = _selectedDate.applyTimeOfDay(
         hour: _startTime.hour, minute: _startTime.minute);
-    notifyService.scheduledNotificationNew(
-      _startTime.hour,
-      _startTime.minute,
-      getCreateTaskObject(),
-      _selectedDate,
-    );
+
+    //await localNotifyManager.showWeeklyAtDayTimeNotification2();
+
+    if (_repeat == "Everyday") {
+      await localNotifyManager.showDailyAtTimeNotification(
+          value ?? 0, task, _startTime);
+    } else if (_repeat == "None") {
+      await localNotifyManager.showScheduledNotification(
+          value ?? 0, task, scheduleTime);
+    } else {
+      await localNotifyManager.showWeeklyAtDayTimeNotification(
+          value ?? 0, task, _startTime);
+    }
+
+    // notifyService.scheduledNotificationNew(
+    //   _startTime.hour,
+    //   _startTime.minute,
+    //   getCreateTaskObject(),
+    //   _selectedDate,
+    // );
   }
 
   TimeOfDay stringToTimeOfDay(String tod) {

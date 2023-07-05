@@ -59,8 +59,6 @@ class _HomePageState extends State<HomePage> {
     //getQuotes();
     _taskController.getTaskBoard();
     _updateCount();
-
-    //await localNotifyManager.showScheduledNotification();
     localNotifyManager.setOnNotificationRecieve(onNotificationRecieve);
     localNotifyManager.setOnNotificationClick(onNotificationClick);
   }
