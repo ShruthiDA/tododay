@@ -1,7 +1,10 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
+
+import '../models/task.dart';
 
 class LocalNotifyManager {
   late FlutterLocalNotificationsPlugin flnPlugin;
@@ -68,47 +71,71 @@ class LocalNotifyManager {
         payload: 'Shruthi payload');
   }
 
-  Future<void> showScheduledNotification() async {
-    var scgeduleNotificationDateTime =
-        DateTime.now().add(Duration(seconds: 20));
+  Future<void> showScheduledNotification(
+      int id, Task task, DateTime atTime) async {
     var androidChannel = AndroidNotificationDetails(
-        'CHANNEL_ID 2', 'CHANNEL_NAME 2',
+        'CHANNEL_ID 1', 'CHANNEL_SCHEDULED_DATE',
         importance: Importance.high, priority: Priority.high, playSound: false);
     var iosChannel = IOSNotificationDetails();
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
     await flnPlugin.schedule(
-        0, "title", "body", scgeduleNotificationDateTime, platformChannel,
-        payload: 'Shruthi new payload');
+        id, "Task Reminder", task.title, atTime, platformChannel,
+        payload: "${task.title}|${task.note}");
   }
 
-  Future<void> showDailyAtTimeNotification() async {
-    var time = Time(15, 50, 0);
+  Future<void> showDailyAtTimeNotification(
+      int id, Task task, TimeOfDay atTime) async {
+    var time = Time(atTime.hour, atTime.minute, 0);
     var scgeduleNotificationDateTime =
         DateTime.now().add(Duration(seconds: 20));
     var androidChannel = AndroidNotificationDetails(
-        'CHANNEL_ID 3', 'CHANNEL_NAME 3',
+        'CHANNEL_ID 2', 'CHANNEL_DAILY',
         importance: Importance.high, priority: Priority.high, playSound: false);
     var iosChannel = IOSNotificationDetails();
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
-    await flnPlugin.showDailyAtTime(0, "title", "body", time, platformChannel,
-        payload: 'Shruthi new payload');
+    await flnPlugin.showDailyAtTime(
+        id, "Task Reminder", task.title, time, platformChannel,
+        payload: "${task.title}|${task.note}");
   }
 
-  Future<void> showWeeklyAtDayTimeNotification() async {
-    var time = Time(15, 50, 0);
+  Future<void> showWeeklyAtDayTimeNotification(
+      int id, Task task, TimeOfDay atTime) async {
+    var time = Time(atTime.hour, atTime.minute, 0);
     var scgeduleNotificationDateTime =
         DateTime.now().add(Duration(seconds: 20));
     var androidChannel = AndroidNotificationDetails(
-        'CHANNEL_ID 4', 'CHANNEL_NAME 4',
-        importance: Importance.high, priority: Priority.high, playSound: false);
+        'CHANNEL_ID 3', 'CHANNEL_WEEKLY',
+        importance: Importance.max, priority: Priority.high, playSound: false);
     var iosChannel = IOSNotificationDetails();
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
-    await flnPlugin.showWeeklyAtDayAndTime(
-        0, "title", "body", Day.monday, time, platformChannel,
-        payload: 'Shruthi new payload');
+
+    if (task.repeat == "Weekend") {
+      await flnPlugin.showWeeklyAtDayAndTime(id * 11, "Task Reminder",
+          task.title, Day.saturday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+      await flnPlugin.showWeeklyAtDayAndTime(id * 12, "Task Reminder",
+          task.title, Day.sunday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+    } else {
+      await flnPlugin.showWeeklyAtDayAndTime(id * 13, "Task Reminder",
+          task.title, Day.monday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+      await flnPlugin.showWeeklyAtDayAndTime(id * 14, "Task Reminder",
+          task.title, Day.tuesday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+      await flnPlugin.showWeeklyAtDayAndTime(id * 15, "Task Reminder",
+          task.title, Day.wednesday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+      await flnPlugin.showWeeklyAtDayAndTime(id * 14, "Task Reminder",
+          task.title, Day.thursday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+      await flnPlugin.showWeeklyAtDayAndTime(id * 15, "Task Reminder",
+          task.title, Day.friday, time, platformChannel,
+          payload: "${task.title}|${task.note}");
+    }
   }
 
   Future<void> cancelNotification(int id) async {

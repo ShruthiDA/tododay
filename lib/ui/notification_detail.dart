@@ -12,8 +12,13 @@ class NotificationDetailPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
             onPressed: () => Get.back(), icon: Icon(Icons.arrow_back_ios)),
-        title: Text(this.label.toString().split("|")[0]),
+        title: Text("Remainder"),
       ),
+      body: Center(
+          child: Column(children: [
+        Text(this.label.toString().split("|")[0]),
+        Text(this.label.toString().split("|")[1])
+      ])),
     );
   }
 }
