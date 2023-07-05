@@ -113,26 +113,27 @@ class LocalNotifyManager {
         NotificationDetails(android: androidChannel, iOS: iosChannel);
 
     if (task.repeat == "Weekend") {
-      await flnPlugin.showWeeklyAtDayAndTime(id * 11, "Task Reminder",
+      await flnPlugin.showWeeklyAtDayAndTime(id * 101, "Task Reminder",
           task.title, Day.saturday, time, platformChannel,
           payload: "${task.title}|${task.note}");
-      await flnPlugin.showWeeklyAtDayAndTime(id * 12, "Task Reminder",
+      await flnPlugin.showWeeklyAtDayAndTime(id * 102, "Task Reminder",
           task.title, Day.sunday, time, platformChannel,
           payload: "${task.title}|${task.note}");
     } else {
-      await flnPlugin.showWeeklyAtDayAndTime(id * 13, "Task Reminder",
+      print(".........${id * 13}");
+      await flnPlugin.showWeeklyAtDayAndTime(id * 103, "Task Reminder",
           task.title, Day.monday, time, platformChannel,
           payload: "${task.title}|${task.note}");
-      await flnPlugin.showWeeklyAtDayAndTime(id * 14, "Task Reminder",
+      await flnPlugin.showWeeklyAtDayAndTime(id * 104, "Task Reminder",
           task.title, Day.tuesday, time, platformChannel,
           payload: "${task.title}|${task.note}");
-      await flnPlugin.showWeeklyAtDayAndTime(id * 15, "Task Reminder",
+      await flnPlugin.showWeeklyAtDayAndTime(id * 105, "Task Reminder",
           task.title, Day.wednesday, time, platformChannel,
           payload: "${task.title}|${task.note}");
-      await flnPlugin.showWeeklyAtDayAndTime(id * 14, "Task Reminder",
+      await flnPlugin.showWeeklyAtDayAndTime(id * 106, "Task Reminder",
           task.title, Day.thursday, time, platformChannel,
           payload: "${task.title}|${task.note}");
-      await flnPlugin.showWeeklyAtDayAndTime(id * 15, "Task Reminder",
+      await flnPlugin.showWeeklyAtDayAndTime(id * 107, "Task Reminder",
           task.title, Day.friday, time, platformChannel,
           payload: "${task.title}|${task.note}");
     }
