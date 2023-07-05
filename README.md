@@ -1,6 +1,8 @@
 # TODO-DAY
 
 Daily Task Planner App 
+App provides option to create, edit & delete tasks. Schedule notification for daily task and update the task status. 
+App also supports both light and dark modes. And has option to change the look of app by changing theme. 
 
 <br/>
 <br/>
