@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_progress_tracker/ui/theme.dart';
 
 class NotificationDetailPage extends StatelessWidget {
   final String? label;
@@ -16,8 +17,13 @@ class NotificationDetailPage extends StatelessWidget {
       ),
       body: Center(
           child: Column(children: [
-        Text(this.label.toString().split("|")[0]),
-        Text(this.label.toString().split("|")[1])
+        SizedBox(height: 30),
+        Text(
+          this.label.toString().split("|")[0],
+          style: taskTitleStyle,
+        ),
+        SizedBox(height: 30),
+        Text(this.label.toString().split("|")[1], style: subHeadingStyle)
       ])),
     );
   }

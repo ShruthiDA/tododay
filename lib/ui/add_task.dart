@@ -8,6 +8,7 @@ import 'package:my_progress_tracker/ui/theme.dart';
 import '../models/board.dart';
 import '../controllers/task_controller.dart';
 import '../services/local_notify_manager.dart';
+import '../services/user_detail_service.dart';
 import 'input_feild.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -400,18 +401,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
         hour: _startTime.hour, minute: _startTime.minute);
 
     //await localNotifyManager.showWeeklyAtDayTimeNotification2();
-
-    if (_repeat == "Everyday") {
-      await localNotifyManager.showDailyAtTimeNotification(
-          value ?? 0, task, _startTime);
-    } else if (_repeat == "None") {
-      await localNotifyManager.showScheduledNotification(
-          value ?? 0, task, scheduleTime);
-    } else {
-      await localNotifyManager.showWeeklyAtDayTimeNotification(
-          value ?? 0, task, _startTime);
+    if (UserDetailService().isNotificationEnabled ?? true) {
+      if (_repeat == "Everyday") {
+        await localNotifyManager.showDailyAtTimeNotification(
+            value ?? 0, task, _startTime);
+      } else if (_repeat == "None") {
+        await localNotifyManager.showScheduledNotification(
+            value ?? 0, task, scheduleTime);
+      } else {
+        await localNotifyManager.showWeeklyAtDayTimeNotification(
+            value ?? 0, task, _startTime);
+      }
     }
-
     // notifyService.scheduledNotificationNew(
     //   _startTime.hour,
     //   _startTime.minute,

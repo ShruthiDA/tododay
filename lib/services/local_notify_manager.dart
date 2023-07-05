@@ -75,7 +75,7 @@ class LocalNotifyManager {
       int id, Task task, DateTime atTime) async {
     var androidChannel = AndroidNotificationDetails(
         'CHANNEL_ID 1', 'CHANNEL_SCHEDULED_DATE',
-        importance: Importance.high, priority: Priority.high, playSound: false);
+        importance: Importance.max, priority: Priority.high, playSound: false);
     var iosChannel = IOSNotificationDetails();
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
@@ -91,7 +91,7 @@ class LocalNotifyManager {
         DateTime.now().add(Duration(seconds: 20));
     var androidChannel = AndroidNotificationDetails(
         'CHANNEL_ID 2', 'CHANNEL_DAILY',
-        importance: Importance.high, priority: Priority.high, playSound: false);
+        importance: Importance.max, priority: Priority.high, playSound: false);
     var iosChannel = IOSNotificationDetails();
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
@@ -142,7 +142,7 @@ class LocalNotifyManager {
     await flnPlugin.cancel(id);
   }
 
-  Future<void> cancelAllNotification(int id) async {
+  Future<void> cancelAllNotification() async {
     await flnPlugin.cancelAll();
   }
 }

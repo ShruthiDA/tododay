@@ -123,6 +123,9 @@ class _HomePageState extends State<HomePage> {
                           UserDetailService().updateNotificationEnanbled(value);
                           setState(() {
                             isNotificationEnabled = value;
+                            if (value == false) {
+                              localNotifyManager.cancelAllNotification();
+                            }
                           });
                         },
                       )),
